@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import IngredientForm from './IngredientForm';
 import IngredientList from './IngredientList';
@@ -6,6 +6,25 @@ import Search from './Search';
 
 function Ingredients() {
   const [userIngredients, setUserIngredients] = useState([]);
+  useEffect(() => {
+    fetch(
+      'https://react-hooks-ingredients-3b620-default-rtdb.firebaseio.com/ingedients.json'
+    )
+      .then((response) => {
+        return response.json();
+      })
+      .then((responseData) => {
+        const loadidIngredients = [];
+        for (let key in responseData) {
+          loadidIngredients.push({
+            id: key,
+            title: responseData[key].title,
+            amount: responseData[key].amount,
+          });
+        }
+        setUserIngredients(loadidIngredients);
+      });
+  }, []);
 
   const addIngredientHandler = (ingredient) => {
     fetch(
