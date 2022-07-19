@@ -6,6 +6,7 @@ import './Search.css';
 const Search = React.memo((props) => {
   const { onLoadIngredients } = props;
   const [enteredFilter, setEnteredFilter] = useState('');
+
   useEffect(() => {
     const query =
       enteredFilter.length === 0
@@ -15,19 +16,17 @@ const Search = React.memo((props) => {
       'https://react-hooks-ingredients-3b620-default-rtdb.firebaseio.com/ingedients.json' +
         query
     )
-      .then((response) => {
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((responseData) => {
         const loadedIngredients = [];
-        for (let key in responseData) {
+        for (const key in responseData) {
           loadedIngredients.push({
             id: key,
             title: responseData[key].title,
             amount: responseData[key].amount,
           });
         }
-        // onLoadIngredients(loadedIngredients);
+        onLoadIngredients(loadedIngredients);
       });
   }, [enteredFilter, onLoadIngredients]);
 
@@ -38,7 +37,7 @@ const Search = React.memo((props) => {
           <label>Filter by Title</label>
           <input
             type="text"
-            valuse={enteredFilter}
+            value={enteredFilter}
             onChange={(event) => {
               setEnteredFilter(event.target.value);
             }}
